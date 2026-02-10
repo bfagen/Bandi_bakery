@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bandi Bakery — Menu</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="index.html">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">
+          <span class="brand-name">Bandi Bakery</span>
+          <span class="brand-sub">Your neighborhood bakery</span>
+        </span>
+      </a>
+
+      <nav class="nav">
+        <a class="nav-link is-active" href="index.html">Menu</a>
+        <a class="nav-link" href="order.html">Order</a>
+        <a class="nav-link" href="about.html">About</a>
+
+        <!-- Header logo -->
+        <img class="nav-logo" src="Images/logo.png" alt="Bandi Bakery logo" loading="eager">
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Featured item -->
+    <section class="featured">
+      <a class="featured-link" href="everything-bagel-loaf.html" aria-label="View Everything Bagel Loaf details">
+        <div class="featured-media">
+
+          <img
+            class="featured-img"
+            src="Images/Everything_1.jpg"
+            alt="Everything Bagel Loaf"
+            loading="eager"
+          />
+
+          <div class="featured-gradient" aria-hidden="true"></div>
+
+          <div class="featured-card">
+            <div class="featured-grid">
+              <!-- Left side: all text/meta/button -->
+              <div class="featured-left">
+                <div class="featured-title">Everything Bagel Loaf</div>
+                <div class="featured-sub">
+                  One of our favorite loaves, it has everything!
+                </div>
+
+                <div class="featured-meta">
+                  <div class="pill">Bread • $10</div>
+                  <div class="pill">Pickup: Wed-Fri</div>
+                  <div class="pill">Preorder required</div>
+                </div>
+
+                <div class="featured-actions">
+                  <span class="btn">View details</span>
+                </div>
+              </div>
+
+              <!-- Right side: large logo panel -->
+              <div class="featured-right" aria-hidden="true">
+                <img class="featured-logo-large" src="Images/logo.png" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <div class="container">
+        <div class="notice">
+          <strong>How pickup works:</strong>
+          Order on the website → choose a pickup time → grab your box from the stand outside.
+        </div>
+      </div>
+    </section>
+
+    <section id="menu" class="menu">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title">Menu</h2>
+          <p class="section-sub">
+            Click any item for details and ordering
+          </p>
+        </div>
+
+        <!-- Row 1 -->
+        <div class="menu-row menu-row-4">
+
+          <a class="card" href="everything-bagel-loaf.html">
+            <div class="card-media">
+              <img class="card-img" src="Images/Everything_1.jpg" alt="Everything Bagel Loaf" loading="lazy">
+            </div>
+            <div class="card-body">
+              <div class="card-top">
+                <h3 class="card-title">Everything Bagel Loaf</h3>
+                <span class="price">$10</span>
+              </div>
+              <p class="card-desc">It has everything!</p>
+              <div class="card-tags">
+                <span class="tag">Bread</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="card" href="parmesan-roasted-garlic-focaccia.html">
+            <div class="card-media">
+              <img class="card-img" src="Images/Parmesan_1.jpg" alt="Parmesan and Roasted Garlic Focaccia" loading="lazy">
+            </div>
+            <div class="card-body">
+              <div class="card-top">
+                <h3 class="card-title">Parmesan and Roasted Garlic Focaccia</h3>
+                <span class="price">$10 / $20</span>
+              </div>
+              <p class="card-desc">Great with pasta or soup.</p>
+              <div class="card-tags">
+                <span class="tag">Focaccia</span>
+                <span class="tag">Small / Large</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="card" href="rosemary-sea-salt-focaccia.html">
+            <div class="card-media">
+              <img class="card-img" src="Images/Rosemary_sea_salt_1.jpg" alt="Rosemary and Sea Salt Focaccia" loading="lazy">
+            </div>
+            <div class="card-body">
+              <div class="card-top">
+                <h3 class="card-title">Rosemary + Sea Salt Focaccia</h3>
+                <span class="price">$10 / $20</span>
+              </div>
+              <p class="card-desc">Classic rosemary with flaky salt.</p>
+              <div class="card-tags">
+                <span class="tag">Focaccia</span>
+                <span class="tag">Small / Large</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="card" href="chai-toffee-cookies.html">
+            <div class="card-media">
+              <img class="card-img" src="Images/Chai_tofee_cookies_2.jpg" alt="Chai Toffee White Chocolate Chip Cookies" loading="lazy">
+            </div>
+            <div class="card-body">
+              <div class="card-top">
+                <h3 class="card-title">Chai Toffee White Chocolate Chip Cookies</h3>
+                <span class="price">$8 / $18</span>
+              </div>
+              <p class="card-desc">Very addictive.</p>
+              <div class="card-tags">
+                <span class="tag">Cookies</span>
+                <span class="tag">Dozen / Batch (~30)</span>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="menu-row menu-row-3">
+
+          <a class="card" href="chocolate-chip-cookies.html">
+            <div class="card-media">
+              <img class="card-img" src="Images/cookies_2.jpg" alt="Chocolate Chip Cookies" loading="lazy">
+            </div>
+            <div class="card-body">
+              <div class="card-top">
+                <h3 class="card-title">Sea Salt Chocolate Chip Cookies</h3>
+                <span class="price">$8 / $18</span>
+              </div>
+              <p class="card-desc">A cozy classic elevated with brown butter and flaky sea salt.</p>
+              <div class="card-tags">
+                <span class="tag">Cookies</span>
+                <span class="tag">Dozen / Batch (~30)</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="card" href="artisan-loaf.html">
+            <div class="card-media">
+              <img class="card-img" src="Images/Bread2.jpg" alt="Artisan Loaf" loading="lazy">
+            </div>
+            <div class="card-body">
+              <div class="card-top">
+                <h3 class="card-title">Artisan Loaf</h3>
+                <span class="price">$10</span>
+              </div>
+              <p class="card-desc">Good old loaf of bread.</p>
+              <div class="card-tags">
+                <span class="tag">Bread</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="card" href="raspberry-jam-donut-focaccia.html">
+            <div class="card-media">
+              <img class="card-img" src="Images/rasberry_1.jpg" alt="Raspberry Jam Donut Focaccia" loading="lazy">
+            </div>
+            <div class="card-body">
+              <div class="card-top">
+                <h3 class="card-title">Raspberry Jam Donut Focaccia</h3>
+                <span class="price">$10 / $20</span>
+              </div>
+              <p class="card-desc">Sweet focaccia with raspberry jam.</p>
+              <div class="card-tags">
+                <span class="tag">Focaccia</span>
+                <span class="tag">Small / Large</span>
+              </div>
+            </div>
+          </a>
+
+        </div>
+
+        <div class="fineprint">
+          Allergens vary by item. We bake in a home kitchen where common allergens are present.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <div>
+        <div class="footer-title">Bandi Bakery LLC</div>
+        <div class="footer-sub">Pickup stand • 6214 W. 67th Ter. OP, KS</div>
+      </div>
+
+      <div class="footer-links footer-links-with-logo">
+        <a href="index.html#menu">Menu</a>
+        <a href="order.html">Order</a>
+        <a href="about.html">About</a>
+
+        <!-- Footer logo -->
+        <img class="footer-logo" src="Images/logo.png" alt="Bandi Bakery logo" loading="lazy">
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
