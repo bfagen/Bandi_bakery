@@ -328,6 +328,14 @@
 
             <!-- hidden payload fields (filled by JS) -->
             <input type="hidden" name="order_items" id="order_items">
+            
+            <!-- Email subject (prevents Gmail threading) -->
+            <input
+              type="hidden"
+              name="subject"
+              value="Bandi Bakery Order (%{submissionId})"
+            >
+            
             <input type="hidden" name="order_total" id="order_total">
 
             <div style="height:14px"></div>
