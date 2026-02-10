@@ -20,20 +20,15 @@
     }
 
     .panel{
-      background: transparent;       /* same as page background */
-      border: none;                  /* remove outline */
-      box-shadow: none;              /* remove card shadow */
-      border-radius: 0;              /* remove “card” shape */
-      padding: 0;                    /* make it feel unboxed */
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      border-radius: 0;
+      padding: 0;
     }
 
-    /* spacing between the “sections” now that they’re not cards */
-    .order-wrap > .panel{
-      margin-bottom: 18px;
-    }
-    .summary > .panel{
-      margin-bottom: 18px;
-    }
+    .order-wrap > .panel{ margin-bottom: 18px; }
+    .summary > .panel{ margin-bottom: 18px; }
 
     .panel-title{
       margin: 0;
@@ -203,7 +198,6 @@
       outline: none;
       font: inherit;
     }
-    textarea{ min-height: 92px; resize: vertical; }
 
     .help{
       color: var(--muted);
@@ -301,14 +295,13 @@
         <div class="panel">
           <h2 class="panel-title">Build your order</h2>
           <div class="panel-rule" aria-hidden="true"></div>
-
           <div class="menu-list" id="menuList"></div>
         </div>
 
         <!-- RIGHT: Summary + Details -->
         <div class="summary">
 
-          <!-- ✅ Netlify form wiring is here -->
+          <!-- Netlify form -->
           <form
             id="orderForm"
             class="panel"
@@ -316,12 +309,12 @@
             action="/thank-you.html"
             name="order"
             data-netlify="true"
+            data-netlify-honeypot="bot-field"
           >
-            <!-- Required for Netlify to recognize the form -->
             <input type="hidden" name="form-name" value="order">
-
-            <!-- Optional: redirect after submit -->
-            <input type="hidden" name="redirect" value="/thank-you.html">
+            <p style="display:none">
+              <label>Don’t fill this out: <input name="bot-field"></label>
+            </p>
 
             <h2 class="panel-title">Order summary</h2>
             <div class="panel-rule" aria-hidden="true"></div>
@@ -373,9 +366,7 @@
               </div>
             </div>
 
-            <div class="help">
-              You must provide at least one: email or phone.
-            </div>
+            <div class="help">You must provide at least one: email or phone.</div>
 
             <div style="height:10px"></div>
 
@@ -468,7 +459,6 @@
       },
     ];
 
-    // state: per item per variant quantity
     const state = {};
     for (const item of MENU){
       state[item.id] = {};
@@ -533,12 +523,10 @@
           const checked = variants.querySelector(`input[name="variant_${item.id}"]:checked`);
           return checked ? checked.value : item.variants[0].code;
         }
-
         function getQty(){
           const v = selectedVariant();
           return state[item.id][v] || 0;
         }
-
         function setQty(newQty){
           const v = selectedVariant();
           state[item.id][v] = Math.max(0, newQty);
@@ -546,7 +534,6 @@
           renderSummary();
         }
 
-        // keep input reflecting currently selected variant
         variants.addEventListener("change", () => {
           input.value = String(getQty());
         });
@@ -611,22 +598,19 @@
       orderTotalField.value = String(total);
     }
 
-    // ---- Pickup date restrictions: Wed–Fri only ----
     function setupDatePicker(){
       const picker = document.getElementById("pickup_date");
 
-      // set min date = today
       const today = new Date();
       const pad = n => String(n).padStart(2, "0");
       const toISO = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 
       picker.min = toISO(today);
 
-      // ensure selection is Wed(3), Thu(4), Fri(5)
       picker.addEventListener("change", () => {
         if (!picker.value) return;
         const d = new Date(picker.value + "T00:00:00");
-        const dow = d.getDay(); // 0 Sun ... 6 Sat
+        const dow = d.getDay();
         if (![3,4,5].includes(dow)){
           picker.value = "";
           showError("Pickup is available Wednesday–Friday only. Please choose a Wed/Thu/Fri date.");
@@ -647,11 +631,10 @@
       box.style.display = "none";
     }
 
-    // ---- Form submit validation + Netlify submit ----
     function setupForm(){
       const form = document.getElementById("orderForm");
 
-      form.addEventListener("submit", async (e) => {
+      form.addEventListener("submit", (e) => {
         e.preventDefault();
         clearError();
 
@@ -684,12 +667,11 @@
           return;
         }
 
-        // Save order details for thank-you page display (optional)
         localStorage.setItem("bb_last_order_total", String(total));
         localStorage.setItem("bb_last_order_date", date);
 
-        // ✅ Submit to Netlify Forms
         form.submit();
+      });
     }
 
     renderMenu();
