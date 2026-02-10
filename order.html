@@ -689,27 +689,7 @@
         localStorage.setItem("bb_last_order_date", date);
 
         // ✅ Submit to Netlify Forms
-        try{
-          const formData = new FormData(form);
-          const body = new URLSearchParams(formData);
-
-          const res = await fetch(form.getAttribute("action") || window.location.pathname, {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: body.toString()
-          });
-
-          if (!res.ok){
-            showError("Something went wrong submitting your order. Please try again.");
-            return;
-          }
-
-          // Netlify will also honor the redirect field, but this is reliable for SPA-ish behavior
-          window.location.href = "thank-you.html";
-        } catch (err){
-          showError("Something went wrong submitting your order. Please try again.");
-        }
-      });
+        form.submit();
     }
 
     renderMenu();
