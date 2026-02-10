@@ -848,6 +848,10 @@ a{ color: inherit; text-decoration: none; }
   }
 }
 
+.brand-mark {
+  display: none;
+}
+
 
 /* ---------------- ABOUT PAGE (FULL IMAGE, NO CROP) ---------------- */
 
