@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bandi Bakery — Order</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* --- Order page layout --- */
+    .order-page{ padding: 26px 0 54px; }
+    .order-wrap{
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      align-items: start;
+    }
+    @media (max-width: 980px){
+      .order-wrap{ grid-template-columns: 1fr; }
+    }
+
+    .panel{
+      background: transparent;       /* same as page background */
+      border: none;                  /* remove outline */
+      box-shadow: none;              /* remove card shadow */
+      border-radius: 0;              /* remove “card” shape */
+      padding: 0;                    /* make it feel unboxed */
+    }
+
+      /* spacing between the “sections” now that they’re not cards */
+    .order-wrap > .panel{
+      margin-bottom: 18px;
+    }
+    .summary > .panel{
+      margin-bottom: 18px;
+    }
+      
+    .panel-title{
+      margin: 0;
+      font-size: 20px;
+      font-weight: 950;
+      letter-spacing: 0.2px;
+    }
+    .panel-rule{
+      height: 2px;
+      width: 100%;
+      margin: 10px 0 14px;
+      background: rgba(31,23,17,0.10);
+      border-radius: 999px;
+    }
+
+    .menu-list{
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .menu-item{
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(31,23,17,0.10);
+      background: rgba(255,255,255,0.65);
+    }
+
+    .menu-thumb{
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #efe7de;
+      border: 1px solid rgba(31,23,17,0.10);
+    }
+    .menu-thumb img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .menu-head{
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: start;
+    }
+    .menu-name{
+      margin: 0;
+      font-weight: 950;
+      font-size: 15px;
+      line-height: 1.2;
+    }
+    .menu-price{
+      color: var(--muted);
+      font-weight: 850;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .menu-controls{
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: 1fr 140px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .variant-row{
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .chip{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(31,23,17,0.12);
+      background: rgba(32,26,20,0.03);
+      font-weight: 850;
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .chip input{ margin: 0; }
+
+    .qty{
+      display: grid;
+      grid-template-columns: 38px 1fr 38px;
+      border: 1px solid rgba(31,23,17,0.12);
+      border-radius: 999px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .qty button{
+      border: 0;
+      background: rgba(32,26,20,0.05);
+      font-weight: 950;
+      cursor: pointer;
+    }
+    .qty input{
+      border: 0;
+      text-align: center;
+      font-weight: 950;
+      width: 100%;
+      padding: 8px 0;
+      outline: none;
+    }
+
+    .summary{
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .summary-list{
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .summary-line{
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-weight: 750;
+      font-size: 14px;
+    }
+    .summary-total{
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 950;
+      font-size: 16px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(31,23,17,0.10);
+    }
+
+    .field-grid{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 560px){
+      .field-grid{ grid-template-columns: 1fr; }
+    }
+
+    label{
+      display: block;
+      font-weight: 850;
+      font-size: 13px;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select{
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(31,23,17,0.12);
+      background: rgba(255,255,255,0.92);
+      outline: none;
+      font: inherit;
+    }
+    textarea{ min-height: 92px; resize: vertical; }
+
+    .help{
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 6px;
+      line-height: 1.35;
+    }
+
+    .consent{
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .consent input{ margin-top: 3px; }
+
+    .place-order{
+      display: flex;
+      justify-content: center;
+      margin-top: 14px;
+    }
+    .place-btn{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 26px;
+      border-radius: 999px;
+      background: #101828;
+      color: #fff;
+      font-weight: 950;
+      letter-spacing: 0.2px;
+      border: 1px solid rgba(0,0,0,0.20);
+      box-shadow: 0 14px 26px rgba(16,24,40,0.18);
+      cursor: pointer;
+    }
+    .place-btn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 18px 34px rgba(16,24,40,0.22);
+    }
+
+    .error{
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(176, 32, 32, 0.08);
+      border: 1px solid rgba(176, 32, 32, 0.18);
+      color: #7a1b1b;
+      font-weight: 800;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    /* make nav/footer logo not “boxed” (transparent PNG) */
+    .nav-logo, .footer-logo{
+      background: transparent !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      object-fit: contain;
+      opacity: 0.80;
+      transform: scale(2);
+      transform-origin: center;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="index.html">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">
+          <span class="brand-name">Bandi Bakery</span>
+          <span class="brand-sub">Your neighborhood bakery</span>
+        </span>
+      </a>
+
+      <nav class="nav">
+        <a class="nav-link" href="index.html">Menu</a>
+        <a class="nav-link is-active" href="order.html">Order</a>
+        <a class="nav-link" href="about.html">About</a>
+        <img class="nav-logo" src="Images/logo.png" alt="Bandi Bakery logo" loading="eager">
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="order-page">
+      <div class="container order-wrap">
+
+        <!-- LEFT: Menu selection -->
+        <div class="panel">
+          <h2 class="panel-title">Build your order</h2>
+          <div class="panel-rule" aria-hidden="true"></div>
+
+          <div class="menu-list" id="menuList"></div>
+        </div>
+
+        <!-- RIGHT: Summary + Details -->
+        <div class="summary">
+
+          <form id="orderForm" class="panel" method="POST">
+            <h2 class="panel-title">Order summary</h2>
+            <div class="panel-rule" aria-hidden="true"></div>
+
+            <div class="summary-list" id="summaryList"></div>
+
+            <div class="summary-total">
+              <div>Total</div>
+              <div id="summaryTotal">$0</div>
+            </div>
+
+            <!-- hidden payload fields (filled by JS) -->
+            <input type="hidden" name="order_items" id="order_items">
+            <input type="hidden" name="order_total" id="order_total">
+
+            <div style="height:14px"></div>
+
+            <h2 class="panel-title">Pickup</h2>
+            <div class="panel-rule" aria-hidden="true"></div>
+
+            <div class="help">
+              Preferred pickup day is <strong>Thursday</strong>. Pickup is available <strong>Wednesday–Friday</strong>.
+              Items will be ready by <strong>2pm</strong> on your pickup day. We’ll text or email when it’s ready.
+            </div>
+
+            <div style="height:10px"></div>
+
+            <div class="field-grid">
+              <div>
+                <label for="pickup_date">Pickup date</label>
+                <input type="date" id="pickup_date" name="pickup_date" required>
+              </div>
+              <div>
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" autocomplete="name" required>
+              </div>
+            </div>
+
+            <div style="height:10px"></div>
+
+            <div class="field-grid">
+              <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" autocomplete="email">
+              </div>
+              <div>
+                <label for="phone">Phone</label>
+                <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="555-555-5555">
+              </div>
+            </div>
+
+            <div class="help">
+              You must provide at least one: email or phone.
+            </div>
+
+            <div style="height:10px"></div>
+
+            <div class="consent">
+              <input type="checkbox" id="consent" name="consent" value="yes" required>
+              <label for="consent" style="margin:0; font-weight:750;">
+                I give permission to contact me by email and/or text <strong>only about this order</strong> (no ads).
+              </label>
+            </div>
+
+            <div style="height:14px"></div>
+
+            <h2 class="panel-title">Payment</h2>
+            <div class="panel-rule" aria-hidden="true"></div>
+
+            <div class="help">
+              <strong>Venmo preferred:</strong> @emmatrone<br>
+              Or pay using the cash box at pickup.
+            </div>
+
+            <div style="height:10px"></div>
+
+            <label for="payment_method">Payment method</label>
+            <select id="payment_method" name="payment_method" required>
+              <option value="Venmo (@emmatrone)">Venmo (@emmatrone) — preferred</option>
+              <option value="Cash box at pickup">Cash box at pickup</option>
+            </select>
+
+            <div style="height:14px"></div>
+
+            <h2 class="panel-title">Pickup instructions</h2>
+            <div class="panel-rule" aria-hidden="true"></div>
+
+            <div class="help">
+              <strong>Pickup address:</strong> 6214 W. 67th Ter. OP, KS<br>
+              <!-- You said you'll fill these in manually later -->
+              Please pick up from the stand outside. If you have questions, email us at thebandibakery@gmail.com.
+            </div>
+
+            <div class="error" id="formError"></div>
+
+            <div class="place-order">
+              <button type="submit" class="place-btn">Place order</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <div>
+        <div class="footer-title">Bandi Bakery LLC</div>
+        <div class="footer-sub">Pickup stand • 6214 W. 67th Ter. OP, KS</div>
+      </div>
+
+      <div class="footer-links footer-links-with-logo">
+        <a href="index.html#menu">Menu</a>
+        <a href="order.html">Order</a>
+        <a href="about.html">About</a>
+        <img class="footer-logo" src="Images/logo.png" alt="Bandi Bakery logo" loading="lazy">
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ---- Menu configuration ----
+    const MENU = [
+      { id: "everything", name: "Everything Bagel Loaf", kind: "bread", img: "Images/Everything_1.jpg",
+        variants: [{ code:"single", label:"Loaf", price:10 }]
+      },
+      { id: "parmesan_focaccia", name: "Parmesan and Roasted Garlic Focaccia", kind: "focaccia", img: "Images/Parmesan_1.jpg",
+        variants: [{ code:"small", label:"Small", price:10 }, { code:"large", label:"Large", price:20 }]
+      },
+      { id: "rosemary_focaccia", name: "Rosemary + Sea Salt Focaccia", kind: "focaccia", img: "Images/Rosemary_sea_salt_1.jpg",
+        variants: [{ code:"small", label:"Small", price:10 }, { code:"large", label:"Large", price:20 }]
+      },
+      { id: "chai_cookies", name: "Chai Toffee White Chocolate Chip Cookies", kind: "cookies", img: "Images/Chai_tofee_cookies_2.jpg",
+        variants: [{ code:"dozen", label:"Dozen", price:8 }, { code:"batch", label:"Batch (~30)", price:18 }]
+      },
+      { id: "chocchip_cookies", name: "Sea Salt Chocolate Chip Cookies", kind: "cookies", img: "Images/cookies_2.jpg",
+        variants: [{ code:"dozen", label:"Dozen", price:8 }, { code:"batch", label:"Batch (~30)", price:18 }]
+      },
+      { id: "artisan_loaf", name: "Artisan Loaf", kind: "bread", img: "Images/Bread2.jpg",
+        variants: [{ code:"single", label:"Loaf", price:10 }]
+      },
+      { id: "raspberry_focaccia", name: "Raspberry Jam Donut Focaccia", kind: "focaccia", img: "Images/rasberry_1.jpg",
+        variants: [{ code:"small", label:"Small", price:10 }, { code:"large", label:"Large", price:20 }]
+      },
+    ];
+
+    // state: per item per variant quantity
+    const state = {};
+    for (const item of MENU){
+      state[item.id] = {};
+      for (const v of item.variants){
+        state[item.id][v.code] = 0;
+      }
+    }
+
+    const menuList = document.getElementById("menuList");
+    const summaryList = document.getElementById("summaryList");
+    const summaryTotal = document.getElementById("summaryTotal");
+    const orderItemsField = document.getElementById("order_items");
+    const orderTotalField = document.getElementById("order_total");
+
+    function money(n){ return "$" + n.toFixed(0); }
+
+    function renderMenu(){
+      menuList.innerHTML = "";
+      for (const item of MENU){
+        const el = document.createElement("div");
+        el.className = "menu-item";
+
+        const priceText = item.variants.length === 1
+          ? money(item.variants[0].price)
+          : item.variants.map(v => `${v.label} ${money(v.price)}`).join(" • ");
+
+        el.innerHTML = `
+          <div class="menu-thumb"><img src="${item.img}" alt="${item.name}"></div>
+          <div>
+            <div class="menu-head">
+              <p class="menu-name">${item.name}</p>
+              <div class="menu-price">${priceText}</div>
+            </div>
+
+            <div class="menu-controls">
+              <div class="variant-row" data-item="${item.id}">
+                ${item.variants.map((v, idx) => `
+                  <label class="chip">
+                    <input type="radio" name="variant_${item.id}" value="${v.code}" ${idx===0 ? "checked": ""}>
+                    ${v.label}
+                  </label>
+                `).join("")}
+              </div>
+
+              <div class="qty" data-item="${item.id}">
+                <button type="button" class="dec" aria-label="Decrease">−</button>
+                <input type="text" class="qtyval" value="0" inputmode="numeric" pattern="[0-9]*" aria-label="Quantity">
+                <button type="button" class="inc" aria-label="Increase">+</button>
+              </div>
+            </div>
+          </div>
+        `;
+        menuList.appendChild(el);
+
+        const qtyBox = el.querySelector(`.qty[data-item="${item.id}"]`);
+        const input = qtyBox.querySelector(".qtyval");
+        const inc = qtyBox.querySelector(".inc");
+        const dec = qtyBox.querySelector(".dec");
+        const variants = el.querySelector(`.variant-row[data-item="${item.id}"]`);
+
+        function selectedVariant(){
+          const checked = variants.querySelector(`input[name="variant_${item.id}"]:checked`);
+          return checked ? checked.value : item.variants[0].code;
+        }
+
+        function getQty(){
+          const v = selectedVariant();
+          return state[item.id][v] || 0;
+        }
+
+        function setQty(newQty){
+          const v = selectedVariant();
+          state[item.id][v] = Math.max(0, newQty);
+          input.value = String(getQty());
+          renderSummary();
+        }
+
+        // keep input reflecting currently selected variant
+        variants.addEventListener("change", () => {
+          input.value = String(getQty());
+        });
+
+        inc.addEventListener("click", () => setQty(getQty() + 1));
+        dec.addEventListener("click", () => setQty(getQty() - 1));
+
+        input.addEventListener("change", () => {
+          const n = parseInt(input.value, 10);
+          setQty(Number.isFinite(n) ? n : 0);
+        });
+      }
+    }
+
+    function computeLines(){
+      const lines = [];
+      let total = 0;
+
+      for (const item of MENU){
+        for (const v of item.variants){
+          const q = state[item.id][v.code] || 0;
+          if (q <= 0) continue;
+          const lineTotal = q * v.price;
+          total += lineTotal;
+          lines.push({
+            name: item.name,
+            variant: v.label,
+            qty: q,
+            unit: v.price,
+            lineTotal
+          });
+        }
+      }
+
+      return { lines, total };
+    }
+
+    function renderSummary(){
+      const { lines, total } = computeLines();
+      summaryList.innerHTML = "";
+
+      if (lines.length === 0){
+        const empty = document.createElement("div");
+        empty.className = "help";
+        empty.textContent = "No items selected yet.";
+        summaryList.appendChild(empty);
+      } else {
+        for (const l of lines){
+          const row = document.createElement("div");
+          row.className = "summary-line";
+          row.innerHTML = `
+            <div>${l.qty} × ${l.name} (${l.variant})</div>
+            <div>${money(l.lineTotal)}</div>
+          `;
+          summaryList.appendChild(row);
+        }
+      }
+
+      summaryTotal.textContent = money(total);
+
+      orderItemsField.value = JSON.stringify(lines, null, 0);
+      orderTotalField.value = String(total);
+    }
+
+    // ---- Pickup date restrictions: Wed–Fri only ----
+    function setupDatePicker(){
+      const picker = document.getElementById("pickup_date");
+
+      // set min date = today
+      const today = new Date();
+      const pad = n => String(n).padStart(2, "0");
+      const toISO = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+
+      picker.min = toISO(today);
+
+      // ensure selection is Wed(3), Thu(4), Fri(5)
+      picker.addEventListener("change", () => {
+        if (!picker.value) return;
+        const d = new Date(picker.value + "T00:00:00");
+        const dow = d.getDay(); // 0 Sun ... 6 Sat
+        if (![3,4,5].includes(dow)){
+          picker.value = "";
+          showError("Pickup is available Wednesday–Friday only. Please choose a Wed/Thu/Fri date.");
+        } else {
+          clearError();
+        }
+      });
+    }
+
+    function showError(msg){
+      const box = document.getElementById("formError");
+      box.textContent = msg;
+      box.style.display = "block";
+    }
+    function clearError(){
+      const box = document.getElementById("formError");
+      box.textContent = "";
+      box.style.display = "none";
+    }
+
+    // ---- Form submit validation + placeholder submission ----
+    function setupForm(){
+      const form = document.getElementById("orderForm");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        clearError();
+
+        const { lines, total } = computeLines();
+        if (lines.length === 0){
+          showError("Please add at least one item to your order.");
+          return;
+        }
+
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const date = document.getElementById("pickup_date").value;
+        const consent = document.getElementById("consent").checked;
+
+        if (!name){
+          showError("Please enter your name.");
+          return;
+        }
+        if (!email && !phone){
+          showError("Please provide at least one contact method: email or phone.");
+          return;
+        }
+        if (!date){
+          showError("Please choose a pickup date (Wed–Fri).");
+          return;
+        }
+        if (!consent){
+          showError("Please check the consent box so we can contact you about your order.");
+          return;
+        }
+
+        // IMPORTANT: This is where you connect a real form endpoint.
+        // For now, we simulate success by redirecting to thank-you.html.
+        // When you choose Formspree/Netlify/etc, you will set:
+        //   form.action = "https://your-endpoint"
+        // and remove the simulated redirect below.
+
+        // Save order details for thank-you page display (optional)
+        localStorage.setItem("bb_last_order_total", String(total));
+        localStorage.setItem("bb_last_order_date", date);
+
+        window.location.href = "thank-you.html";
+      });
+    }
+
+    renderMenu();
+    renderSummary();
+    setupDatePicker();
+    setupForm();
+  </script>
+</body>
+</html>
+

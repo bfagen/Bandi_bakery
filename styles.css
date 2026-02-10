@@ -1,0 +1,912 @@
+:root{
+  --bg: #fbf3e9;
+  --bg-2: #f7eadc;
+  --surface: #ffffff;
+
+  --ink: #1f1711;
+  --muted: #6b5647;
+
+  --line: rgba(31, 23, 17, 0.12);
+
+  /* Keep the same vibe, but a touch richer */
+  --accent: #c07a4a;     /* original-ish caramel */
+  --accent-2: #2f6f64;   /* herb */
+  --accent-3: #b84a5a;   /* berry */
+
+  --shadow: 0 14px 34px rgba(31, 23, 17, 0.14);
+  --shadow-soft: 0 10px 24px rgba(31, 23, 17, 0.08);
+  --radius: 18px;
+}
+
+*{ box-sizing: border-box; }
+html, body{ height: 100%; }
+body{
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  color: var(--ink);
+
+  /* Move gradient “seams” so they don’t cut through content */
+  background:
+    radial-gradient(1200px 700px at 10% -16%, rgba(192,122,74,0.18), transparent 58%),
+    radial-gradient(900px 600px at 100% -10%, rgba(184,74,90,0.12), transparent 58%),
+    linear-gradient(180deg, var(--bg), var(--bg-2));
+}
+
+a{ color: inherit; text-decoration: none; }
+.container{
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+/* Header */
+.site-header{
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(251,243,233,0.88);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.header-row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 0;
+}
+
+.brand{
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.brand-mark{
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #ffd6b8 0%, var(--accent) 55%, #8e4b23 100%);
+  box-shadow:
+    0 0 0 4px rgba(192,122,74,0.22),
+    0 10px 22px rgba(31,23,17,0.10);
+}
+.brand-name{
+  display: block;
+  font-weight: 850;
+  letter-spacing: 0.2px;
+}
+.brand-sub{
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.nav{ display: flex; gap: 14px; }
+.nav-link{
+  font-weight: 750;
+  font-size: 14px;
+  color: var(--muted);
+  padding: 8px 10px;
+  border-radius: 999px;
+  transition: background 140ms ease, color 140ms ease, transform 140ms ease, border 140ms ease;
+  border: 1px solid transparent;
+}
+.nav-link:hover{
+  background: rgba(31,23,17,0.06);
+  transform: translateY(-1px);
+}
+.nav-link.is-active{
+  color: var(--ink);
+  background: rgba(192,122,74,0.18);
+  border: 1px solid rgba(192,122,74,0.20);
+}
+
+/* Featured */
+.featured{
+  padding: 10px 0 30px;
+}
+.featured-link{
+  display: block;
+  width: 100%;
+}
+.featured-media{
+  position: relative;
+  width: 100%;
+  height: clamp(420px, 62vh, 700px);
+  overflow: hidden;
+  background: #eee6dd;
+}
+
+.featured-img{
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.featured-gradient{
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.00) 25%,
+    rgba(0,0,0,0.16) 62%,
+    rgba(0,0,0,0.54) 100%
+  );
+}
+
+.featured-media::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.22);
+  pointer-events: none;
+}
+
+/* Featured card tweaks: narrower + centered text + slight transparency */
+.featured-card{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 22px;
+
+  /* narrower than before */
+  width: min(760px, calc(100% - 64px));
+
+  background: rgba(255,255,255,0.86);
+  border: 1px solid rgba(255,255,255,0.56);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: 18px 18px 16px;
+
+  text-align: center;
+}
+
+.featured-title{
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+}
+.featured-sub{
+  margin-top: 6px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.featured-meta{
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.pill{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+
+  background: linear-gradient(180deg, rgba(47,111,100,0.14), rgba(47,111,100,0.08));
+  color: #1a4b45;
+  border: 1px solid rgba(47,111,100,0.18);
+
+  font-weight: 850;
+  font-size: 13px;
+}
+
+.featured-actions{
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Button reverted to calmer original style (no bright orange) */
+.btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 12px;
+
+  background: var(--accent);
+  color: #fff;
+  font-weight: 900;
+  border: 1px solid rgba(0,0,0,0.10);
+
+  box-shadow:
+    0 10px 18px rgba(192,122,74,0.18),
+    0 12px 24px rgba(31,23,17,0.10);
+
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+.btn:hover{
+  transform: translateY(-1px);
+  box-shadow:
+    0 12px 22px rgba(192,122,74,0.22),
+    0 14px 30px rgba(31,23,17,0.12);
+}
+
+/* Notice */
+.notice{
+  margin-top: 16px;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(192,122,74,0.18);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-soft);
+}
+.notice strong{ font-weight: 950; }
+
+/* Menu section */
+/* Add a subtle wash starting ABOVE the section head, so the “line” sits above Menu */
+.menu{
+  padding: 26px 0 50px;
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,0.00) 0%,
+      rgba(255,255,255,0.18) 10%,
+      rgba(255,255,255,0.00) 70%);
+}
+
+.section-head{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+.section-title{
+  margin: 0;
+  font-size: 28px;
+  font-weight: 950;
+  letter-spacing: 0.2px;
+}
+.section-sub{
+  margin: 0;
+  color: var(--muted);
+  max-width: 52ch;
+  line-height: 1.4;
+}
+
+/* Rows */
+.menu-row{
+  display: grid;
+  gap: 16px;
+  margin-top: 14px;
+}
+.menu-row-4{
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.menu-row-3{
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: min(820px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Responsive */
+@media (max-width: 980px){
+  .menu-row-4{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .menu-row-3{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+}
+@media (max-width: 560px){
+  .menu-row-4{ grid-template-columns: 1fr; }
+  .menu-row-3{ grid-template-columns: 1fr; }
+  .featured-card{ padding: 16px; width: min(720px, calc(100% - 28px)); }
+  .featured-title{ font-size: 22px; }
+}
+
+/* Cards */
+.card{
+  background: rgba(255,255,255,0.94);
+  border: 1px solid rgba(31,23,17,0.12);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(31,23,17,0.10);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+.card:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 18px 38px rgba(31,23,17,0.16);
+}
+
+.card-media{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #efe7de;
+}
+.card-img{
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(1.05) contrast(1.02);
+  transition: transform 180ms ease;
+}
+.card:hover .card-img{
+  transform: scale(1.03);
+}
+
+.card-body{
+  padding: 14px 14px 16px;
+}
+.card-top{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.card-title{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 950;
+  line-height: 1.2;
+}
+.price{
+  font-weight: 950;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.card-desc{
+  margin: 10px 0 10px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.card-tags{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tag{
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+
+  background: rgba(192,122,74,0.18);
+  color: #6a3419;
+  border: 1px solid rgba(192,122,74,0.16);
+}
+.card-tags .tag + .tag{
+  background: rgba(184,74,90,0.14);
+  border: 1px solid rgba(184,74,90,0.14);
+  color: #6b2330;
+}
+
+.fineprint{
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ---------- Logo placements ---------- */
+
+/* Featured card: logo + text centered */
+.featured-header{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.featured-logo{
+  height: 86px;               /* about “box-sized” without overwhelming it */
+  width: auto;
+  display: block;
+  border-radius: 12px;
+
+  /* white background logo -> blend with semi-transparent card */
+  opacity: 0.82;
+
+  /* subtle soften so it matches the card */
+  box-shadow: 0 10px 20px rgba(31,23,17,0.10);
+}
+
+.featured-text{
+  text-align: center;
+}
+
+.nav-logo,
+.footer-logo{
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  opacity: 0.75;
+  transform: scale(2.2);
+  transform-origin: center;
+  pointer-events: none;
+}
+
+
+.featured-logo-large{
+  width: 100%;
+  height: 100%;
+  max-height: 170px;
+  object-fit: contain;
+  opacity: 0.75;
+  transform: scale(1.7);
+  transform-origin: center;
+  pointer-events: none;
+}
+
+
+
+
+/* ----- Nav + footer logos ----- */
+.nav{
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.nav-logo{
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 12px;
+  opacity: 0.70;
+  box-shadow: 0 10px 18px rgba(31,23,17,0.08);
+}
+
+.footer-links-with-logo{
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.footer-logo{
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 12px;
+  opacity: 0.70;
+  box-shadow: 0 10px 18px rgba(31,23,17,0.08);
+}
+
+/* ----- Hero card: logo panel to the right ----- */
+.featured-card{
+  /* keep your existing styles, but ensure this remains */
+  text-align: left; /* override earlier centering: we center the left block instead */
+}
+
+.featured-grid{
+  display: grid;
+  grid-template-columns: 1fr 220px; /* right logo panel width */
+  gap: 18px;
+  align-items: center;
+}
+
+.featured-left{
+  text-align: center; /* center the whole left “stack” */
+}
+
+.featured-right{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.featured-logo-large{
+  width: 100%;
+  height: 100%;
+  max-height: 170px; /* keeps it about the height of the content */
+  object-fit: contain;
+  border-radius: 16px;
+  opacity: 0.70;
+}
+
+/* Make sure pills + button remain centered */
+.featured-meta,
+.featured-actions{
+  justify-content: center;
+}
+
+/* Responsive: stack logo under content on small screens */
+@media (max-width: 680px){
+  .featured-grid{
+    grid-template-columns: 1fr;
+  }
+  .featured-logo-large{
+    max-height: 140px;
+  }
+  .nav-logo,
+  .footer-logo{
+    width: 40px;
+    height: 40px;
+  }
+}
+
+
+
+
+
+/* Make featured layout stack nicely on small screens */
+@media (max-width: 560px){
+  .featured-header{
+    flex-direction: column;
+    gap: 10px;
+  }
+  .featured-logo{
+    height: 74px;
+  }
+}
+
+/* Menu section: small decorative logos near the header */
+.menu .container{
+  position: relative; /* anchor for absolute logo placement */
+}
+
+.menu-logo{
+  position: absolute;
+  right: 0;
+  width: 62px;
+  height: 62px;
+  object-fit: cover;
+  border-radius: 14px;
+  opacity: 0.55;
+  filter: saturate(1.02) contrast(1.02);
+  box-shadow: 0 10px 20px rgba(31,23,17,0.08);
+  pointer-events: none; /* purely decorative */
+}
+
+/* “Top right” near the Menu heading */
+.menu-logo-top{
+  top: 18px;
+}
+
+/* “Bottom right” near the Menu heading area (below the header line) */
+.menu-logo-bottom{
+  top: 108px;
+}
+
+/* On smaller screens, tuck them in a bit so they don't crowd text */
+@media (max-width: 980px){
+  .menu-logo{
+    width: 54px;
+    height: 54px;
+    right: 6px;
+  }
+  .menu-logo-bottom{
+    top: 112px;
+  }
+}
+
+@media (max-width: 560px){
+  .menu-logo{
+    width: 48px;
+    height: 48px;
+    opacity: 0.45;
+  }
+  .menu-logo-top{
+    top: 10px;
+  }
+  .menu-logo-bottom{
+    top: 92px;
+  }
+}
+
+
+
+
+/* Footer */
+.site-footer{
+  /* Make the bottom “line” feel like it begins here */
+  border-top: 1px solid rgba(31,23,17,0.12);
+  padding: 22px 0 28px;
+
+  /* Subtle footer wash so the lower gradient seam sits below the fineprint */
+  background: linear-gradient(180deg, rgba(255,255,255,0.00), rgba(255,255,255,0.22));
+}
+
+.footer-row{
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+}
+.footer-title{
+  font-weight: 950;
+}
+.footer-sub{
+  color: var(--muted);
+  margin-top: 4px;
+  font-size: 13px;
+}
+.footer-links{
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.footer-links a{
+  color: var(--muted);
+  font-weight: 900;
+}
+.footer-links a:hover{ color: var(--ink); }
+
+
+
+
+/* ---------- Item detail page ---------- */
+
+.item-page{
+  padding: 26px 0 54px;
+}
+
+.item-wrap{
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 22px;
+  align-items: start;
+}
+
+/* square image block like menu cards */
+.item-media{
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #efe7de;
+  box-shadow: 0 12px 28px rgba(31,23,17,0.10);
+  border: 1px solid rgba(31,23,17,0.12);
+}
+
+.item-img{
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(1.05) contrast(1.02);
+}
+
+/* text card */
+.item-card{
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(31,23,17,0.12);
+  border-radius: 22px;
+  box-shadow: 0 12px 28px rgba(31,23,17,0.10);
+  padding: 22px 22px 18px;
+}
+
+.item-title{
+  margin: 0;
+  font-size: 34px;
+  font-weight: 950;
+  letter-spacing: 0.2px;
+}
+
+.item-rule{
+  height: 2px;
+  width: 100%;
+  margin: 12px 0 14px;
+  background: rgba(31,23,17,0.12);
+  border-radius: 999px;
+}
+
+.item-body{
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+.item-line{
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.item-line strong{
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.item-note{
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* big oval button near bottom */
+.item-actions{
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+}
+
+.order-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 14px 24px;
+  border-radius: 999px;
+
+  background: #101828; /* dark navy/black */
+  color: #fff;
+
+  font-weight: 950;
+  letter-spacing: 0.2px;
+
+  border: 1px solid rgba(0,0,0,0.20);
+  box-shadow: 0 14px 26px rgba(16,24,40,0.18);
+
+  transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+}
+
+.order-btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 18px 34px rgba(16,24,40,0.22);
+  filter: saturate(1.05);
+}
+
+/* responsive */
+@media (max-width: 980px){
+  .item-wrap{
+    grid-template-columns: 1fr;
+  }
+  .item-media{
+    max-width: 520px;
+    margin: 0 auto;
+  }
+}
+
+.item-description{
+  font-size: 16px;          /* slightly larger than ingredients */
+  line-height: 1.5;
+  margin-bottom: 14px;
+  color: var(--ink);
+}
+
+
+/* --- Nav/footer logo: show only the transparent PNG (no box) --- */
+.nav-logo,
+.footer-logo{
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+
+  /* remove “badge” look */
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+
+  /* keep your aesthetic */
+  opacity: 0.80;
+
+  /* if you still want the 2x zoom effect */
+  transform: scale(2);
+  transform-origin: center;
+
+  pointer-events: none;
+}
+
+
+.fineprint{
+  margin-top: 36px; /* increase this value */
+}
+
+/* --- Everything Bagel (item) page refinements --- */
+
+/* Bigger image column, thinner info column, centered as a group */
+.item-wrap{
+  grid-template-columns: minmax(640px, 760px) minmax(260px, 360px);
+  gap: 18px;
+  justify-content: center;
+  align-items: center; /* vertically center the info with the image */
+}
+
+/* Keep square image but larger due to wider column */
+.item-media{
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Remove the visible “box” — make it blend with the page background */
+.item-card{
+  background: transparent !important;     /* same as page */
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;                 /* remove box padding */
+}
+
+/* Optional: keep spacing consistent without the box padding */
+.item-title{
+  margin-top: 0;
+}
+
+.item-rule{
+  margin: 14px 0 14px;
+}
+
+/* Make the order button feel anchored */
+.item-actions{
+  margin-top: 18px;
+  justify-content: flex-start; /* or center if you prefer */
+}
+
+/* Responsive: stack on smaller screens */
+@media (max-width: 980px){
+  .item-wrap{
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  .item-media{
+    max-width: 600px;
+  }
+}
+
+
+/* ---------------- ABOUT PAGE (FULL IMAGE, NO CROP) ---------------- */
+
+.about-hero{
+  position: relative;
+  padding: 0;
+}
+
+/* Full-width container */
+.about-media{
+  position: relative;
+  width: 100%;
+  overflow: visible;
+}
+
+/* Image keeps natural aspect ratio, no cropping */
+.about-img{
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Soft overlay so text remains readable */
+.about-gradient{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.12) 0%,
+    rgba(0,0,0,0.05) 40%,
+    rgba(0,0,0,0.35) 100%
+  );
+}
+
+/* Centered floating text card */
+.about-card-wrap{
+  position: absolute;
+  top: 120px;                 /* moves it higher */
+  left: 48px;                 /* moves it toward the left */
+  width: min(420px, 90vw);    /* thinner box */
+  pointer-events: none;
+}
+
+.about-card{
+  pointer-events: auto;
+  background: rgba(251, 247, 242, 0.90);
+  border: 1px solid rgba(32, 26, 20, 0.12);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: 20px 20px 18px;
+  backdrop-filter: blur(10px);
+}
+
+@media (max-width: 640px){
+  .about-card-wrap{
+    left: 50%;
+    top: 40px;
+    transform: translateX(-50%);
+    width: calc(100% - 32px);
+  }
+}
