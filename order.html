@@ -27,14 +27,14 @@
       padding: 0;                    /* make it feel unboxed */
     }
 
-      /* spacing between the “sections” now that they’re not cards */
+    /* spacing between the “sections” now that they’re not cards */
     .order-wrap > .panel{
       margin-bottom: 18px;
     }
     .summary > .panel{
       margin-bottom: 18px;
     }
-      
+
     .panel-title{
       margin: 0;
       font-size: 20px;
@@ -308,7 +308,20 @@
         <!-- RIGHT: Summary + Details -->
         <div class="summary">
 
-          <form id="orderForm" class="panel" method="POST">
+          <!-- ✅ Netlify form wiring is here -->
+          <form
+            id="orderForm"
+            class="panel"
+            method="POST"
+            name="order"
+            data-netlify="true"
+          >
+            <!-- Required for Netlify to recognize the form -->
+            <input type="hidden" name="form-name" value="order">
+
+            <!-- Optional: redirect after submit -->
+            <input type="hidden" name="redirect" value="/thank-you.html">
+
             <h2 class="panel-title">Order summary</h2>
             <div class="panel-rule" aria-hidden="true"></div>
 
@@ -397,7 +410,6 @@
 
             <div class="help">
               <strong>Pickup address:</strong> 6214 W. 67th Ter. OP, KS<br>
-              <!-- You said you'll fill these in manually later -->
               Please pick up from the stand outside. If you have questions, email us at thebandibakery@gmail.com.
             </div>
 
@@ -634,7 +646,7 @@
       box.style.display = "none";
     }
 
-    // ---- Form submit validation + placeholder submission ----
+    // ---- Form submit validation + Netlify submit ----
     function setupForm(){
       const form = document.getElementById("orderForm");
 
@@ -671,17 +683,31 @@
           return;
         }
 
-        // IMPORTANT: This is where you connect a real form endpoint.
-        // For now, we simulate success by redirecting to thank-you.html.
-        // When you choose Formspree/Netlify/etc, you will set:
-        //   form.action = "https://your-endpoint"
-        // and remove the simulated redirect below.
-
         // Save order details for thank-you page display (optional)
         localStorage.setItem("bb_last_order_total", String(total));
         localStorage.setItem("bb_last_order_date", date);
 
-        window.location.href = "thank-you.html";
+        // ✅ Submit to Netlify Forms
+        try{
+          const formData = new FormData(form);
+          const body = new URLSearchParams(formData);
+
+          const res = await fetch(form.getAttribute("action") || window.location.pathname, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: body.toString()
+          });
+
+          if (!res.ok){
+            showError("Something went wrong submitting your order. Please try again.");
+            return;
+          }
+
+          // Netlify will also honor the redirect field, but this is reliable for SPA-ish behavior
+          window.location.href = "thank-you.html";
+        } catch (err){
+          showError("Something went wrong submitting your order. Please try again.");
+        }
       });
     }
 
@@ -692,4 +718,5 @@
   </script>
 </body>
 </html>
+
 
