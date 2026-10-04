@@ -257,6 +257,68 @@
       .date-fields .preferred-date{ grid-column: auto; }
     }
 
+    .date-picker-button{
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(31,23,17,0.12);
+      background: rgba(255,255,255,0.92);
+      color: var(--muted);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+    .date-picker-button.has-value{ color: var(--ink); font-weight: 850; }
+    .date-picker-status{ margin: 10px 0 0; color: var(--muted); font-size: 12px; }
+    .pickup-notice{
+      padding: 13px 15px;
+      border-radius: 16px;
+      border: 1px solid rgba(79,112,92,0.24);
+      background: rgba(116,151,128,0.10);
+      color: var(--ink);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .date-calendar-modal{
+      position: fixed;
+      inset: 0;
+      z-index: 1400;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(31,23,17,0.55);
+      backdrop-filter: blur(3px);
+    }
+    .date-calendar-modal.is-open{ display: flex; }
+    .date-calendar-card{
+      width: min(560px, 100%);
+      max-height: calc(100vh - 36px);
+      overflow: auto;
+      border-radius: 24px;
+      background: #fffaf1;
+      box-shadow: 0 24px 65px rgba(31,23,17,0.28);
+      padding: 22px;
+    }
+    .date-calendar-header{ display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+    .date-calendar-header h2{ margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 26px; }
+    .date-calendar-close{ width: 38px; height: 38px; border: 0; border-radius: 50%; background: rgba(31,23,17,0.08); font-size: 24px; cursor: pointer; }
+    .date-calendar-nav{ display: grid; grid-template-columns: 42px 1fr 42px; gap: 7px; margin: 18px 0 12px; }
+    .date-calendar-nav button{ min-height: 42px; border: 1px solid rgba(31,23,17,0.12); border-radius: 12px; background: white; font-weight: 850; cursor: pointer; }
+    .date-calendar-weekdays, .date-calendar-grid{ display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+    .date-calendar-weekdays{ color: var(--muted); font-size: 11px; font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 6px; }
+    .date-calendar-day, .date-calendar-blank{ min-height: 54px; }
+    .date-calendar-day{ border: 1px solid rgba(31,23,17,0.09); border-radius: 11px; background: rgba(255,255,255,0.68); color: #8d867e; cursor: not-allowed; }
+    .date-calendar-day.available{ background: #4f8068; border-color: #406d58; color: white; cursor: pointer; font-weight: 900; }
+    .date-calendar-day.current{ box-shadow: inset 0 0 0 3px #efb45d; }
+    .date-calendar-day.other-selected{ background: #8c67a7; border-color: #76538f; color: white; cursor: not-allowed; box-shadow: none; }
+    .date-calendar-legend{ display: flex; flex-wrap: wrap; gap: 13px; margin: 15px 0 0; color: var(--muted); font-size: 12px; }
+    .date-calendar-legend span{ display: inline-flex; align-items: center; gap: 6px; }
+    .date-calendar-legend i{ width: 10px; height: 10px; border-radius: 50%; background: #4f8068; }
+    .date-calendar-legend i.selected{ background: #8c67a7; }
+
     .fulfillment-fieldset{
       border: 0;
       padding: 0;
@@ -673,55 +735,33 @@
             <div class="date-fields">
               <div class="preferred-date">
                 <label for="preferred_date">Preferred order date</label>
-                <input type="date" id="preferred_date" name="preferred_date" required>
-                <div class="help">Your first choice. Available dates are Wednesday–Friday.</div>
+                <input type="hidden" id="preferred_date" name="preferred_date">
+                <button class="date-picker-button" type="button" data-date-field="preferred_date">Choose preferred date</button>
+                <div class="help">Your first choice. Green dates are currently available.</div>
               </div>
               <div>
                 <label for="alternate_date_1">Backup date 1</label>
-                <input type="date" id="alternate_date_1" name="alternate_date_1" required>
+                <input type="hidden" id="alternate_date_1" name="alternate_date_1">
+                <button class="date-picker-button" type="button" data-date-field="alternate_date_1">Choose 1st alternative</button>
                 <div class="help">1st alternative</div>
               </div>
               <div>
                 <label for="alternate_date_2">Backup date 2</label>
-                <input type="date" id="alternate_date_2" name="alternate_date_2" required>
+                <input type="hidden" id="alternate_date_2" name="alternate_date_2">
+                <button class="date-picker-button" type="button" data-date-field="alternate_date_2">Choose 2nd alternative</button>
                 <div class="help">2nd alternative</div>
               </div>
             </div>
+
+            <p class="date-picker-status" id="datePickerStatus">Loading current bakery availability…</p>
 
             <input type="hidden" id="pickup_date" name="pickup_date">
 
             <div style="height:14px"></div>
 
-            <fieldset class="fulfillment-fieldset">
-              <legend>How would you like to receive your order?</legend>
-              <div class="fulfillment-options">
-                <label class="fulfillment-option">
-                  <input type="radio" name="fulfillment_method" value="pickup" checked required>
-                  <span>
-                    <strong>Pickup</strong>
-                    <small>Pick up from our pickup box.</small>
-                  </span>
-                </label>
-                <label class="fulfillment-option">
-                  <input type="radio" name="fulfillment_method" value="delivery" required>
-                  <span>
-                    <strong>Delivery request</strong>
-                    <small>Available only when the requested location fits our existing schedule.</small>
-                  </span>
-                </label>
-              </div>
-            </fieldset>
-
-            <div class="delivery-details" id="deliveryDetailsWrap" hidden>
-              <label for="delivery_details">Where should we deliver?</label>
-              <textarea
-                id="delivery_details"
-                name="delivery_details"
-                maxlength="2000"
-                placeholder="Describe the location in plain words—for example, your workplace or a business we visit often. Include the business name and any helpful timing details."
-              ></textarea>
-              <div class="help">Delivery is not guaranteed until we confirm your order.</div>
-            </div>
+            <input type="hidden" name="fulfillment_method" value="pickup">
+            <input type="hidden" name="delivery_details" value="">
+            <div class="pickup-notice"><strong>Pickup:</strong> Orders are picked up from our pickup box. If you have already discussed delivery with us, add the agreed delivery instructions in the Comment box below.</div>
 
             <div style="height:18px"></div>
 
@@ -788,20 +828,19 @@
               id="comment"
               name="comment"
               maxlength="2000"
-              placeholder="Add any notes or requests here"
+              placeholder="Add any notes or requests here. If you previously arranged delivery with us, include the agreed delivery instructions."
             ></textarea>
 
-            <div class="help">Maximum 2000 characters.</div>
+            <div class="help">If delivery was previously discussed with us, include those instructions here. Maximum 2000 characters.</div>
 
             <div style="height:14px"></div>
 
-            <h2 class="panel-title">Pickup and delivery details</h2>
+            <h2 class="panel-title">Pickup details</h2>
             <div class="panel-rule" aria-hidden="true"></div>
 
             <div class="help">
               <strong>Pickup address:</strong> 6214 W. 67th Ter. OP, KS<br>
               Pickup orders are placed in the stand outside and are normally ready by <strong>2pm</strong> on the confirmed day.
-              Delivery requests are reviewed individually and are not final until confirmed by email.
               If you have questions, email us at thebandibakery@gmail.com.
             </div>
 
@@ -836,6 +875,19 @@
     </div>
   </div>
 
+  <div class="date-calendar-modal" id="dateCalendarModal" aria-hidden="true">
+    <div class="date-calendar-card" role="dialog" aria-modal="true" aria-labelledby="dateCalendarTitle">
+      <div class="date-calendar-header">
+        <div><div class="eyebrow">Current availability</div><h2 id="dateCalendarTitle">Choose a date</h2></div>
+        <button class="date-calendar-close" id="closeDateCalendar" type="button" aria-label="Close calendar">×</button>
+      </div>
+      <div class="date-calendar-nav"><button id="previousDateMonth" type="button" aria-label="Previous month">‹</button><button id="dateMonthLabel" type="button">This month</button><button id="nextDateMonth" type="button" aria-label="Next month">›</button></div>
+      <div class="date-calendar-weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+      <div class="date-calendar-grid" id="dateCalendarGrid"></div>
+      <div class="date-calendar-legend"><span><i></i>Available</span><span><i class="selected"></i>Already selected for another choice</span></div>
+    </div>
+  </div>
+
   <footer class="site-footer">
     <div class="container footer-row">
       <div>
@@ -853,6 +905,12 @@
   </footer>
 
   <script>
+    const AVAILABILITY_URL = "https://bandi-bakery-order-desk.netlify.app/api/public-availability";
+    const DEFAULT_AVAILABILITY = { defaultWeekdays: [3, 4, 5], minimumLeadDays: 1, exceptions: {}, bakeryToday: "" };
+    let availability = { ...DEFAULT_AVAILABILITY, defaultWeekdays: [...DEFAULT_AVAILABILITY.defaultWeekdays], exceptions: {} };
+    let activeDateField = null;
+    let dateCalendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+
     const MENU = [
       {
         id: "everything",
@@ -1078,47 +1136,113 @@
       orderTotalField.value = String(total);
     }
 
+    function isoDate(date) {
+      const pad = value => String(value).padStart(2, "0");
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+    }
+
+    function dateFromISO(value) {
+      const date = new Date(`${value}T12:00:00`);
+      return Number.isNaN(date.getTime()) ? null : date;
+    }
+
+    function formatOrderDate(value) {
+      const date = dateFromISO(value);
+      return date ? new Intl.DateTimeFormat("en-US", { weekday: "short", month: "long", day: "numeric" }).format(date) : "";
+    }
+
+    function earliestOrderDate() {
+      const today = dateFromISO(availability.bakeryToday) || new Date();
+      today.setHours(12, 0, 0, 0);
+      today.setDate(today.getDate() + Number(availability.minimumLeadDays || 0) + 1);
+      return isoDate(today);
+    }
+
+    function customerDateIsAvailable(value) {
+      const date = dateFromISO(value);
+      if (!date || value < earliestOrderDate()) return false;
+      if (Object.prototype.hasOwnProperty.call(availability.exceptions || {}, value)) return availability.exceptions[value] === true;
+      return (availability.defaultWeekdays || [3, 4, 5]).includes(date.getDay());
+    }
+
+    async function loadCurrentAvailability(force = false) {
+      if (!force && availability.updatedAt) return;
+      const status = document.getElementById("datePickerStatus");
+      try {
+        const response = await fetch(AVAILABILITY_URL, { cache: "no-store" });
+        if (!response.ok) throw new Error("Availability unavailable");
+        const data = await response.json();
+        availability = {
+          defaultWeekdays: Array.isArray(data.defaultWeekdays) ? data.defaultWeekdays : [3, 4, 5],
+          minimumLeadDays: Number.isInteger(Number(data.minimumLeadDays)) ? Number(data.minimumLeadDays) : 1,
+          exceptions: data.exceptions && typeof data.exceptions === "object" ? data.exceptions : {},
+          bakeryToday: data.bakeryToday || "",
+          updatedAt: data.updatedAt || new Date().toISOString()
+        };
+        status.textContent = `Showing live availability. ${availability.minimumLeadDays} full day${availability.minimumLeadDays === 1 ? "" : "s"} of advance notice required.`;
+      } catch {
+        availability = { ...DEFAULT_AVAILABILITY, defaultWeekdays: [3, 4, 5], exceptions: {}, bakeryToday: isoDate(new Date()) };
+        status.textContent = "Live availability could not be loaded, so the normal Wednesday–Friday schedule is shown. Your date is still a request until confirmed.";
+      }
+    }
+
+    function selectedDates() {
+      return ["preferred_date", "alternate_date_1", "alternate_date_2"].map(id => document.getElementById(id).value).filter(Boolean);
+    }
+
+    function updateDateButtons() {
+      const labels = { preferred_date: "Choose preferred date", alternate_date_1: "Choose 1st alternative", alternate_date_2: "Choose 2nd alternative" };
+      document.querySelectorAll(".date-picker-button").forEach(button => {
+        const value = document.getElementById(button.dataset.dateField).value;
+        button.textContent = value ? formatOrderDate(value) : labels[button.dataset.dateField];
+        button.classList.toggle("has-value", Boolean(value));
+      });
+    }
+
+    function renderDateCalendar() {
+      const grid = document.getElementById("dateCalendarGrid");
+      grid.innerHTML = "";
+      const year = dateCalendarMonth.getFullYear();
+      const month = dateCalendarMonth.getMonth();
+      document.getElementById("dateMonthLabel").textContent = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(dateCalendarMonth);
+      for (let blank = 0; blank < dateCalendarMonth.getDay(); blank += 1) {
+        const spacer = document.createElement("span"); spacer.className = "date-calendar-blank"; grid.appendChild(spacer);
+      }
+      const otherSelections = selectedDates().filter(value => value !== document.getElementById(activeDateField).value);
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      for (let day = 1; day <= totalDays; day += 1) {
+        const date = new Date(year, month, day, 12); const value = isoDate(date); const available = customerDateIsAvailable(value); const current = document.getElementById(activeDateField).value === value; const usedElsewhere = otherSelections.includes(value);
+        const button = document.createElement("button"); button.type = "button"; button.className = `date-calendar-day${available ? " available" : ""}${current ? " current" : ""}${usedElsewhere ? " other-selected" : ""}`; button.textContent = String(day); button.disabled = !available || usedElsewhere;
+        button.setAttribute("aria-label", `${formatOrderDate(value)}${usedElsewhere ? ", already selected" : available ? ", available" : ", unavailable"}`);
+        if (available && !usedElsewhere) button.addEventListener("click", () => { document.getElementById(activeDateField).value = value; updateDateButtons(); closeDateCalendar(); clearError(); });
+        grid.appendChild(button);
+      }
+    }
+
+    async function openDateCalendar(fieldId) {
+      await loadCurrentAvailability();
+      activeDateField = fieldId;
+      const selected = dateFromISO(document.getElementById(fieldId).value);
+      const earliest = dateFromISO(earliestOrderDate());
+      dateCalendarMonth = new Date((selected || earliest).getFullYear(), (selected || earliest).getMonth(), 1);
+      document.getElementById("dateCalendarTitle").textContent = fieldId === "preferred_date" ? "Choose your preferred date" : fieldId === "alternate_date_1" ? "Choose your 1st alternative" : "Choose your 2nd alternative";
+      renderDateCalendar();
+      const modal = document.getElementById("dateCalendarModal"); modal.classList.add("is-open"); modal.setAttribute("aria-hidden", "false"); document.body.style.overflow = "hidden";
+    }
+
+    function closeDateCalendar() {
+      const modal = document.getElementById("dateCalendarModal"); modal.classList.remove("is-open"); modal.setAttribute("aria-hidden", "true"); document.body.style.overflow = document.getElementById("orderModal").classList.contains("is-open") ? "hidden" : "";
+    }
+
     function setupScheduling() {
-      const dateFields = [
-        document.getElementById("preferred_date"),
-        document.getElementById("alternate_date_1"),
-        document.getElementById("alternate_date_2")
-      ];
-      const today = new Date();
-      const pad = n => String(n).padStart(2, "0");
-      const toISO = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-
-      for (const picker of dateFields) {
-        picker.min = toISO(today);
-
-        picker.addEventListener("change", () => {
-          if (!picker.value) return;
-          const d = new Date(picker.value + "T00:00:00");
-          const dow = d.getDay();
-          if (![3, 4, 5].includes(dow)) {
-            picker.value = "";
-            showError("Order dates are available Wednesday–Friday only. Please choose a Wed/Thu/Fri date.");
-          } else {
-            clearError();
-          }
-        });
-      }
-
-      const fulfillmentRadios = document.querySelectorAll('input[name="fulfillment_method"]');
-      const deliveryWrap = document.getElementById("deliveryDetailsWrap");
-      const deliveryDetails = document.getElementById("delivery_details");
-
-      function updateFulfillmentDetails() {
-        const selected = document.querySelector('input[name="fulfillment_method"]:checked')?.value || "pickup";
-        const isDelivery = selected === "delivery";
-        deliveryWrap.hidden = !isDelivery;
-        deliveryDetails.required = isDelivery;
-        deliveryDetails.disabled = !isDelivery;
-        if (!isDelivery) deliveryDetails.setCustomValidity("");
-      }
-
-      fulfillmentRadios.forEach(radio => radio.addEventListener("change", updateFulfillmentDetails));
-      updateFulfillmentDetails();
+      document.querySelectorAll(".date-picker-button").forEach(button => button.addEventListener("click", () => openDateCalendar(button.dataset.dateField)));
+      document.getElementById("closeDateCalendar").addEventListener("click", closeDateCalendar);
+      document.getElementById("dateCalendarModal").addEventListener("click", event => { if (event.target.id === "dateCalendarModal") closeDateCalendar(); });
+      document.getElementById("previousDateMonth").addEventListener("click", () => { dateCalendarMonth = new Date(dateCalendarMonth.getFullYear(), dateCalendarMonth.getMonth() - 1, 1); renderDateCalendar(); });
+      document.getElementById("nextDateMonth").addEventListener("click", () => { dateCalendarMonth = new Date(dateCalendarMonth.getFullYear(), dateCalendarMonth.getMonth() + 1, 1); renderDateCalendar(); });
+      document.getElementById("dateMonthLabel").addEventListener("click", () => { const earliest = dateFromISO(earliestOrderDate()); dateCalendarMonth = new Date(earliest.getFullYear(), earliest.getMonth(), 1); renderDateCalendar(); });
+      updateDateButtons();
+      loadCurrentAvailability();
     }
 
     function setupOrderModal() {
@@ -1207,7 +1331,7 @@
     function setupForm() {
       const form = document.getElementById("orderForm");
 
-      form.addEventListener("submit", (e) => {
+      form.addEventListener("submit", async (e) => {
         e.preventDefault();
         clearError();
 
@@ -1223,8 +1347,6 @@
         const preferredDate = document.getElementById("preferred_date").value;
         const alternateDate1 = document.getElementById("alternate_date_1").value;
         const alternateDate2 = document.getElementById("alternate_date_2").value;
-        const fulfillmentMethod = document.querySelector('input[name="fulfillment_method"]:checked')?.value;
-        const deliveryDetails = document.getElementById("delivery_details").value.trim();
         const consent = document.getElementById("consent").checked;
 
         if (!name) {
@@ -1243,27 +1365,14 @@
           showError("Please choose your preferred date and both backup dates.");
           return;
         }
-        const today = new Date();
-        const pad = value => String(value).padStart(2, "0");
-        const todayISO = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
-        const datesAreAllowed = [preferredDate, alternateDate1, alternateDate2].every(value => {
-          const day = new Date(value + "T00:00:00").getDay();
-          return value >= todayISO && [3, 4, 5].includes(day);
-        });
+        await loadCurrentAvailability(true);
+        const datesAreAllowed = [preferredDate, alternateDate1, alternateDate2].every(customerDateIsAvailable);
         if (!datesAreAllowed) {
-          showError("All three dates must be future Wednesday, Thursday, or Friday dates.");
+          showError("One of your dates is no longer available. Please choose three dates shown in green on the calendar.");
           return;
         }
         if (new Set([preferredDate, alternateDate1, alternateDate2]).size !== 3) {
           showError("Please choose three different dates so we have genuine scheduling alternatives.");
-          return;
-        }
-        if (!fulfillmentMethod) {
-          showError("Please choose pickup or delivery.");
-          return;
-        }
-        if (fulfillmentMethod === "delivery" && !deliveryDetails) {
-          showError("Please describe the requested delivery location.");
           return;
         }
         if (!consent) {
