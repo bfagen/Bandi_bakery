@@ -150,6 +150,18 @@
       flex-direction: column;
       gap: 12px;
     }
+    .order-summary-card{
+      position: sticky;
+      top: 110px;
+      padding: 20px;
+      border: 1px solid rgba(31,23,17,0.10);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.72);
+      box-shadow: 0 16px 34px rgba(31,23,17,0.08);
+    }
+    @media (max-width: 980px){
+      .order-summary-card{ position: static; }
+    }
     .summary-list{
       display: flex;
       flex-direction: column;
@@ -214,15 +226,25 @@
     .schedule-note{
       margin: 2px 0 16px;
       padding: 14px 15px;
-      border: 1px solid rgba(192,122,74,0.24);
+      border: 1px solid rgba(79,112,92,0.24);
       border-radius: 16px;
-      background: rgba(192,122,74,0.09);
-      color: var(--ink);
+      background: rgba(116,151,128,0.13);
+      color: #1f1711;
       font-size: 14px;
       line-height: 1.5;
     }
 
-    .schedule-note strong{ color: var(--accent-2); }
+    .schedule-note strong{
+      display: block;
+      margin-bottom: 5px;
+      color: #1f1711;
+    }
+    .schedule-signature{
+      display: block;
+      margin-top: 9px;
+      font-weight: 850;
+      color: #1f1711;
+    }
 
     .date-fields{
       display: grid;
@@ -325,6 +347,74 @@
     .place-btn:hover{
       transform: translateY(-1px);
       box-shadow: 0 18px 34px rgba(16,24,40,0.22);
+    }
+    .order-here-btn{
+      width: 100%;
+      min-height: 56px;
+      font-size: 17px;
+    }
+    .order-start-help{
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .order-modal{
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(31,23,17,0.44);
+      backdrop-filter: blur(4px);
+      z-index: 900;
+    }
+    .order-modal.is-open{ display: flex; }
+    .order-modal-card{
+      width: min(780px, 100%);
+      max-height: 92vh;
+      overflow: auto;
+      position: relative;
+      padding: 28px;
+      border: 1px solid rgba(31,23,17,0.12);
+      border-radius: 28px;
+      background: linear-gradient(180deg, #fffdf9, #fbf3e9);
+      box-shadow: 0 28px 70px rgba(31,23,17,0.30);
+    }
+    .order-modal-header{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+    .order-modal-title{
+      margin: 0;
+      font-size: 26px;
+      font-weight: 950;
+      color: var(--ink);
+    }
+    .order-modal-close{
+      flex: 0 0 auto;
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(31,23,17,0.12);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.88);
+      color: var(--ink);
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .order-modal-total{
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 18px;
+      padding: 11px 13px;
+      border-radius: 14px;
+      background: rgba(31,23,17,0.05);
+      font-weight: 900;
     }
 
     .error{
@@ -451,6 +541,13 @@
     }
 
     @media (max-width: 560px){
+      .order-modal{ padding: 10px; }
+      .order-modal-card{
+        max-height: 94vh;
+        padding: 20px 16px;
+        border-radius: 22px;
+      }
+      .order-modal-title{ font-size: 22px; }
       .payment-modal{
         padding: 12px;
       }
@@ -515,7 +612,7 @@
         <div class="summary">
           <form
             id="orderForm"
-            class="panel"
+            class="panel order-summary-card"
             method="POST"
             action="/thank-you.html"
             name="order"
@@ -545,15 +642,32 @@
             >
             <input type="hidden" name="order_total" id="order_total">
 
-            <div style="height:14px"></div>
+            <div class="place-order">
+              <button type="button" class="place-btn order-here-btn" id="openOrderModal">Order Here</button>
+            </div>
+            <div class="help order-start-help">Add your items, then open the order form to choose dates and send your request.</div>
+
+            <div class="order-modal" id="orderModal" aria-hidden="true">
+              <div class="order-modal-card" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle" tabindex="-1">
+                <div class="order-modal-header">
+                  <h2 class="order-modal-title" id="orderModalTitle">Complete your order request</h2>
+                  <button type="button" class="order-modal-close" id="closeOrderModal" aria-label="Close order form">×</button>
+                </div>
+
+                <div class="order-modal-total">
+                  <span>Current order total</span>
+                  <span id="summaryModalTotal">$0</span>
+                </div>
 
             <h2 class="panel-title">Scheduling</h2>
             <div class="panel-rule" aria-hidden="true"></div>
 
             <div class="schedule-note">
               <strong>We’ll do our best to accommodate your preferred date.</strong>
-              Because Bandi Bakery is a small, part-time business, please choose two backup dates in order of preference.
-              We’ll email you after reviewing the order to confirm the date and whether it will be picked up or delivered.
+              As Bandi Bakery is a small, part-time bakery, please select two alternate pickup dates in order of preference.
+              Once I’ve reviewed your order request, I’ll reach out via email to confirm your order fulfillment date.
+              Thank you for your flexibility and understanding.
+              <span class="schedule-signature">Emma Trone</span>
             </div>
 
             <div class="date-fields">
@@ -565,12 +679,12 @@
               <div>
                 <label for="alternate_date_1">Backup date 1</label>
                 <input type="date" id="alternate_date_1" name="alternate_date_1" required>
-                <div class="help">Your preferred alternative.</div>
+                <div class="help">1st alternative</div>
               </div>
               <div>
                 <label for="alternate_date_2">Backup date 2</label>
                 <input type="date" id="alternate_date_2" name="alternate_date_2" required>
-                <div class="help">Your second alternative.</div>
+                <div class="help">2nd alternative</div>
               </div>
             </div>
 
@@ -585,7 +699,7 @@
                   <input type="radio" name="fulfillment_method" value="pickup" checked required>
                   <span>
                     <strong>Pickup</strong>
-                    <small>Pick up from our outdoor stand in Overland Park.</small>
+                    <small>Pick up from our pickup box.</small>
                   </span>
                 </label>
                 <label class="fulfillment-option">
@@ -695,6 +809,8 @@
 
             <div class="place-order">
               <button type="submit" class="place-btn">Place order</button>
+            </div>
+              </div>
             </div>
           </form>
         </div>
@@ -825,6 +941,7 @@
     const menuList = document.getElementById("menuList");
     const summaryList = document.getElementById("summaryList");
     const summaryTotal = document.getElementById("summaryTotal");
+    const summaryModalTotal = document.getElementById("summaryModalTotal");
     const orderItemsField = document.getElementById("order_items");
     const orderTotalField = document.getElementById("order_total");
 
@@ -956,6 +1073,7 @@
       }
 
       summaryTotal.textContent = money(total);
+      summaryModalTotal.textContent = money(total);
       orderItemsField.value = JSON.stringify(lines, null, 0);
       orderTotalField.value = String(total);
     }
@@ -1003,6 +1121,43 @@
       updateFulfillmentDetails();
     }
 
+    function setupOrderModal() {
+      const modal = document.getElementById("orderModal");
+      const card = modal.querySelector(".order-modal-card");
+      const openBtn = document.getElementById("openOrderModal");
+      const closeBtn = document.getElementById("closeOrderModal");
+      let lastFocused = null;
+
+      function openModal() {
+        lastFocused = document.activeElement;
+        clearError();
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        card.focus();
+      }
+
+      function closeModal() {
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+        if (lastFocused) lastFocused.focus();
+      }
+
+      openBtn.addEventListener("click", openModal);
+      closeBtn.addEventListener("click", closeModal);
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        const paymentIsOpen = document.getElementById("paymentModal").classList.contains("is-open");
+        if (e.key === "Escape" && modal.classList.contains("is-open") && !paymentIsOpen) {
+          closeModal();
+        }
+      });
+    }
+
     function setupPaymentModal() {
       const modal = document.getElementById("paymentModal");
       const openBtn = document.getElementById("openPaymentInfo");
@@ -1017,7 +1172,8 @@
       function closeModal() {
         modal.classList.remove("is-open");
         modal.setAttribute("aria-hidden", "true");
-        document.body.style.overflow = "";
+        const orderIsOpen = document.getElementById("orderModal").classList.contains("is-open");
+        document.body.style.overflow = orderIsOpen ? "hidden" : "";
       }
 
       openBtn.addEventListener("click", openModal);
@@ -1126,6 +1282,7 @@
     renderMenu();
     renderSummary();
     setupScheduling();
+    setupOrderModal();
     setupPaymentModal();
     setupForm();
   </script>
