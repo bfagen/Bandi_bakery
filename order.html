@@ -211,6 +211,88 @@
       line-height: 1.35;
     }
 
+    .schedule-note{
+      margin: 2px 0 16px;
+      padding: 14px 15px;
+      border: 1px solid rgba(192,122,74,0.24);
+      border-radius: 16px;
+      background: rgba(192,122,74,0.09);
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .schedule-note strong{ color: var(--accent-2); }
+
+    .date-fields{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .date-fields .preferred-date{ grid-column: 1 / -1; }
+    @media (max-width: 560px){
+      .date-fields{ grid-template-columns: 1fr; }
+      .date-fields .preferred-date{ grid-column: auto; }
+    }
+
+    .fulfillment-fieldset{
+      border: 0;
+      padding: 0;
+      margin: 0;
+      min-width: 0;
+    }
+    .fulfillment-fieldset legend{
+      font-weight: 850;
+      font-size: 13px;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .fulfillment-options{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .fulfillment-option{
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      min-height: 76px;
+      padding: 12px;
+      border: 1px solid rgba(31,23,17,0.12);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.68);
+      cursor: pointer;
+    }
+    .fulfillment-option:has(input:checked){
+      border-color: rgba(192,122,74,0.58);
+      background: rgba(192,122,74,0.10);
+      box-shadow: 0 0 0 2px rgba(192,122,74,0.08);
+    }
+    .fulfillment-option input{ margin-top: 3px; }
+    .fulfillment-option span{ display: block; }
+    .fulfillment-option strong{
+      display: block;
+      color: var(--ink);
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+    .fulfillment-option small{
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .delivery-details{
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.54);
+      border: 1px solid rgba(31,23,17,0.08);
+    }
+    @media (max-width: 560px){
+      .fulfillment-options{ grid-template-columns: 1fr; }
+    }
+
     .consent{
       display: flex;
       gap: 10px;
@@ -465,48 +547,101 @@
 
             <div style="height:14px"></div>
 
-            <h2 class="panel-title">Pickup</h2>
+            <h2 class="panel-title">Scheduling</h2>
             <div class="panel-rule" aria-hidden="true"></div>
 
-            <div class="help">
-              Preferred pickup day is <strong>Thursday</strong>. Pickup is available <strong>Wednesday–Friday</strong>.
-              Items will be ready by <strong>2pm</strong> on your pickup day. We’ll text or email when it’s ready.
+            <div class="schedule-note">
+              <strong>We’ll do our best to accommodate your preferred date.</strong>
+              Because Bandi Bakery is a small, part-time business, please choose two backup dates in order of preference.
+              We’ll email you after reviewing the order to confirm the date and whether it will be picked up or delivered.
             </div>
 
-            <div style="height:10px"></div>
+            <div class="date-fields">
+              <div class="preferred-date">
+                <label for="preferred_date">Preferred order date</label>
+                <input type="date" id="preferred_date" name="preferred_date" required>
+                <div class="help">Your first choice. Available dates are Wednesday–Friday.</div>
+              </div>
+              <div>
+                <label for="alternate_date_1">Backup date 1</label>
+                <input type="date" id="alternate_date_1" name="alternate_date_1" required>
+                <div class="help">Your preferred alternative.</div>
+              </div>
+              <div>
+                <label for="alternate_date_2">Backup date 2</label>
+                <input type="date" id="alternate_date_2" name="alternate_date_2" required>
+                <div class="help">Your second alternative.</div>
+              </div>
+            </div>
+
+            <input type="hidden" id="pickup_date" name="pickup_date">
+
+            <div style="height:14px"></div>
+
+            <fieldset class="fulfillment-fieldset">
+              <legend>How would you like to receive your order?</legend>
+              <div class="fulfillment-options">
+                <label class="fulfillment-option">
+                  <input type="radio" name="fulfillment_method" value="pickup" checked required>
+                  <span>
+                    <strong>Pickup</strong>
+                    <small>Pick up from our outdoor stand in Overland Park.</small>
+                  </span>
+                </label>
+                <label class="fulfillment-option">
+                  <input type="radio" name="fulfillment_method" value="delivery" required>
+                  <span>
+                    <strong>Delivery request</strong>
+                    <small>Available only when the requested location fits our existing schedule.</small>
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="delivery-details" id="deliveryDetailsWrap" hidden>
+              <label for="delivery_details">Where should we deliver?</label>
+              <textarea
+                id="delivery_details"
+                name="delivery_details"
+                maxlength="2000"
+                placeholder="Describe the location in plain words—for example, your workplace or a business we visit often. Include the business name and any helpful timing details."
+              ></textarea>
+              <div class="help">Delivery is not guaranteed until we confirm your order.</div>
+            </div>
+
+            <div style="height:18px"></div>
+
+            <h2 class="panel-title">Contact information</h2>
+            <div class="panel-rule" aria-hidden="true"></div>
 
             <div class="field-grid">
-              <div>
-                <label for="pickup_date">Pickup date</label>
-                <input type="date" id="pickup_date" name="pickup_date" required>
-              </div>
               <div>
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" autocomplete="name" maxlength="2000" required>
               </div>
+              <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" autocomplete="email" maxlength="2000" required>
+              </div>
             </div>
 
             <div style="height:10px"></div>
 
             <div class="field-grid">
               <div>
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" autocomplete="email" maxlength="2000">
-              </div>
-              <div>
-                <label for="phone">Phone</label>
+                <label for="phone">Phone <span class="help">(optional)</span></label>
                 <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="555-555-5555" maxlength="2000">
               </div>
             </div>
 
-            <div class="help">You must provide at least one: email or phone.</div>
+            <div class="help">We require an email so we can send your confirmed date and order details.</div>
 
             <div style="height:10px"></div>
 
             <div class="consent">
               <input type="checkbox" id="consent" name="consent" value="yes" required>
               <label for="consent" style="margin:0; font-weight:750;">
-                I give permission to contact me by email and/or text <strong>only about this order</strong> (no ads).
+                I give permission to contact me by email and, if provided, text <strong>only about this order</strong> (no ads).
               </label>
             </div>
 
@@ -546,12 +681,14 @@
 
             <div style="height:14px"></div>
 
-            <h2 class="panel-title">Pickup instructions</h2>
+            <h2 class="panel-title">Pickup and delivery details</h2>
             <div class="panel-rule" aria-hidden="true"></div>
 
             <div class="help">
               <strong>Pickup address:</strong> 6214 W. 67th Ter. OP, KS<br>
-              Please pick up from the stand outside. If you have questions, email us at thebandibakery@gmail.com.
+              Pickup orders are placed in the stand outside and are normally ready by <strong>2pm</strong> on the confirmed day.
+              Delivery requests are reviewed individually and are not final until confirmed by email.
+              If you have questions, email us at thebandibakery@gmail.com.
             </div>
 
             <div class="error" id="formError"></div>
@@ -823,26 +960,47 @@
       orderTotalField.value = String(total);
     }
 
-    function setupDatePicker() {
-      const picker = document.getElementById("pickup_date");
-
+    function setupScheduling() {
+      const dateFields = [
+        document.getElementById("preferred_date"),
+        document.getElementById("alternate_date_1"),
+        document.getElementById("alternate_date_2")
+      ];
       const today = new Date();
       const pad = n => String(n).padStart(2, "0");
       const toISO = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
-      picker.min = toISO(today);
+      for (const picker of dateFields) {
+        picker.min = toISO(today);
 
-      picker.addEventListener("change", () => {
-        if (!picker.value) return;
-        const d = new Date(picker.value + "T00:00:00");
-        const dow = d.getDay();
-        if (![3, 4, 5].includes(dow)) {
-          picker.value = "";
-          showError("Pickup is available Wednesday–Friday only. Please choose a Wed/Thu/Fri date.");
-        } else {
-          clearError();
-        }
-      });
+        picker.addEventListener("change", () => {
+          if (!picker.value) return;
+          const d = new Date(picker.value + "T00:00:00");
+          const dow = d.getDay();
+          if (![3, 4, 5].includes(dow)) {
+            picker.value = "";
+            showError("Order dates are available Wednesday–Friday only. Please choose a Wed/Thu/Fri date.");
+          } else {
+            clearError();
+          }
+        });
+      }
+
+      const fulfillmentRadios = document.querySelectorAll('input[name="fulfillment_method"]');
+      const deliveryWrap = document.getElementById("deliveryDetailsWrap");
+      const deliveryDetails = document.getElementById("delivery_details");
+
+      function updateFulfillmentDetails() {
+        const selected = document.querySelector('input[name="fulfillment_method"]:checked')?.value || "pickup";
+        const isDelivery = selected === "delivery";
+        deliveryWrap.hidden = !isDelivery;
+        deliveryDetails.required = isDelivery;
+        deliveryDetails.disabled = !isDelivery;
+        if (!isDelivery) deliveryDetails.setCustomValidity("");
+      }
+
+      fulfillmentRadios.forEach(radio => radio.addEventListener("change", updateFulfillmentDetails));
+      updateFulfillmentDetails();
     }
 
     function setupPaymentModal() {
@@ -905,20 +1063,51 @@
 
         const name = document.getElementById("name").value.trim();
         const email = document.getElementById("email").value.trim();
-        const phone = document.getElementById("phone").value.trim();
-        const date = document.getElementById("pickup_date").value;
+        const emailInput = document.getElementById("email");
+        const preferredDate = document.getElementById("preferred_date").value;
+        const alternateDate1 = document.getElementById("alternate_date_1").value;
+        const alternateDate2 = document.getElementById("alternate_date_2").value;
+        const fulfillmentMethod = document.querySelector('input[name="fulfillment_method"]:checked')?.value;
+        const deliveryDetails = document.getElementById("delivery_details").value.trim();
         const consent = document.getElementById("consent").checked;
 
         if (!name) {
           showError("Please enter your name.");
           return;
         }
-        if (!email && !phone) {
-          showError("Please provide at least one contact method: email or phone.");
+        if (!email) {
+          showError("Please enter your email so we can confirm the order date.");
           return;
         }
-        if (!date) {
-          showError("Please choose a pickup date (Wed–Fri).");
+        if (!emailInput.validity.valid) {
+          showError("Please enter a valid email address.");
+          return;
+        }
+        if (!preferredDate || !alternateDate1 || !alternateDate2) {
+          showError("Please choose your preferred date and both backup dates.");
+          return;
+        }
+        const today = new Date();
+        const pad = value => String(value).padStart(2, "0");
+        const todayISO = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+        const datesAreAllowed = [preferredDate, alternateDate1, alternateDate2].every(value => {
+          const day = new Date(value + "T00:00:00").getDay();
+          return value >= todayISO && [3, 4, 5].includes(day);
+        });
+        if (!datesAreAllowed) {
+          showError("All three dates must be future Wednesday, Thursday, or Friday dates.");
+          return;
+        }
+        if (new Set([preferredDate, alternateDate1, alternateDate2]).size !== 3) {
+          showError("Please choose three different dates so we have genuine scheduling alternatives.");
+          return;
+        }
+        if (!fulfillmentMethod) {
+          showError("Please choose pickup or delivery.");
+          return;
+        }
+        if (fulfillmentMethod === "delivery" && !deliveryDetails) {
+          showError("Please describe the requested delivery location.");
           return;
         }
         if (!consent) {
@@ -926,8 +1115,9 @@
           return;
         }
 
+        document.getElementById("pickup_date").value = preferredDate;
         localStorage.setItem("bb_last_order_total", String(total));
-        localStorage.setItem("bb_last_order_date", date);
+        localStorage.setItem("bb_last_order_date", preferredDate);
 
         form.submit();
       });
@@ -935,11 +1125,9 @@
 
     renderMenu();
     renderSummary();
-    setupDatePicker();
+    setupScheduling();
     setupPaymentModal();
     setupForm();
   </script>
 </body>
 </html>
-
-
